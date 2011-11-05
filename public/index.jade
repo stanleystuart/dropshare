@@ -1,0 +1,12 @@
+!!! 5
+html
+  head
+    link(rel='stylesheet',href='style.css')
+    script(src='pakmanaged.js')
+  body
+    #dropzone
+      | Drag & Drop Files Here
+      br
+      | Or Click Here To Upload
+      form#upload
+        input#filechooser(name='file',type='file',multiple='multiple')

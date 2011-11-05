@@ -1,0 +1,22 @@
+{
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info/)",
+  "name": "dropshare-client",
+  "description": "Client-code for dropshare",
+  "version": "0.1.0",
+  "homepage": "dropshare.coolaj86.info",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/dropshare.git"
+  },
+  "main": "app.js",
+  "scripts": {
+    "test": "served"
+  },
+  "engines": {
+    "node": "~0.4.8"
+  },
+  "dependencies": {
+    "jeesh": "*"
+  },
+  "devDependencies": {}
+}
