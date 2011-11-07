@@ -8,5 +8,7 @@ html
       | Drag & Drop Files Here
       br
       | Or Click Here To Upload
+      //- TODO find out why this is laggy when placed outside of #dropzone
       form#upload
-        input#filechooser(name='file',type='file',multiple='multiple')
+        input#filechooser(name='file',type='file',multiple='multiple',webkitdirectory)
+    ul#uploadlist
