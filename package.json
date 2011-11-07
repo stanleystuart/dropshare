@@ -1,0 +1,20 @@
+{
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info/)",
+  "name": "dropshare",
+  "description": "A ge.tt / min.us clone for your private servers",
+  "version": "0.1.0",
+  "homepage": "dropshare.coolaj86.info",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/dropshare.git"
+  },
+  "main": "lib/index",
+  "scripts": {
+    "test": "dropshare 4567"
+  },
+  "engines": {
+    "node": "~0.4.8"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
