@@ -7,9 +7,10 @@
   var express = require('express')
     , util = require('util')
     , fs = require('fs')
+    , numericBuffer = require('numeric-buffer')
     , Futures = require('futures')
-    , installTime
     , redisWrapper = require('./redis-wrapper')
+    , installTime
     , storage = new redisWrapper();
 
   var app = module.exports = express.createServer();
@@ -90,11 +91,11 @@
       toReturn = randomInts[counter];
 
       id += toReturn;
-      // TODO: implement base64 conversion
-      // id = parseInt(id, 10);
-      // id = new Buffer(id).toString('base64');
+
+      id = parseInt(id, 10);
+      var idString = numericBuffer(id).toString('base64');
       counter += 1;
-      return id;
+      return idString;
     };
   }());
 
