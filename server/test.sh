@@ -11,9 +11,5 @@ curl "${HOST}/files/new"  -X POST \
         "type": "text/plain"
       }]'
 
-# curl "${HOST}/files"  -X POST \
-#   -H "Content-Type: application/json" \
-#   -d '{
-#         "id": "41767754"
-#       }' \
-#   --form upload=@foobar.txt
+curl "${HOST}/files"  -X POST \
+  --form upload=@foobar.txt

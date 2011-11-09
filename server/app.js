@@ -9,6 +9,7 @@
     , fs = require('fs')
     , numericBuffer = require('numeric-buffer')
     , Futures = require('futures')
+    , Formaline = require('formaline')
     , redisWrapper = require('./redis-wrapper')
     , installTime
     , storage = new redisWrapper();
@@ -108,7 +109,7 @@
     , err
 
     console.log(typeof(req.body));
-    if (! req.body instanceof Array) {
+    if (!req.body instanceof Array) {
       var err = {
         'result': 'error',
         'data': 'Must be an array of file metadata.'
@@ -135,7 +136,50 @@
 
 
   app.post('/files', function (req, res, next) {
-    res.send("HURP DURP", 200);
+    var form
+    , config;
+
+    config = {
+      sha1sum: true
+      , uploadThreshold: 1024 * 1024 * 1024
+      , listeners: {
+        'loadend': function (json, res, callback) {
+          console.log( '\nPost Done.\n' );
+          console.log( '\n JSON -> \n', json, '\n' );
+          res.writeHead( 200, { 'content-type' : 'text/plain' } );
+          res.write( '-> ' + new Date() + '\n' );
+          res.write( '-> request processed! \n' );
+          res.write( '\n-> stats -> ' + JSON.stringify( json.stats, null, 4 ) + '\n' );
+          res.write( '\n Initial Configuration : ' + JSON.stringify( form.initialConfig, function ( key, value ) {
+            if ( typeof value === 'function' ) {
+              return '..';
+            }
+            return value;
+          }, 4 ) + '\n' );
+
+          res.write( '\n-> fields received: [ { .. } , { .. } ] \n   ****************\n' + JSON.stringify( json.fields, null, 1 ) + '\n' );
+          res.write( '\n-> files written: [ { .. } , { .. } ] \n   **************\n ' + JSON.stringify( json.files, null, 1 ) + '\n' );
+          if ( form.removeIncompleteFiles ) {
+            res.write( '\n-> partially written ( removed ): [ { .. } , { .. } ] \n   *****************\n'+ JSON.stringify( json.incomplete, null, 1 ) + '\n' );
+          } else {
+            if ( json.incomplete.length !== 0 ) {
+              res.write( '\n-> partially written ( not removed ): \n   *****************\n' + JSON.stringify( json.incomplete, null, 1 ) + '\n' );
+            }
+          }
+          res.end();
+          try {
+            callback();
+          } catch ( err ) {
+            console.log( 'error', err.stack );
+          }
+        }
+      } // end listeners
+    }; // end config object
+
+    form = new Formaline(config);
+    form.parse(req, res, function () {
+      console.log("formaline callback called");
+    });
   });
 
   app.get('/files/:id/:filename?', function (req, res, next) {
