@@ -19,6 +19,7 @@
   "dependencies": {
       "connect": "*"
     , "mime": "*"
+    , "fs.extra": ">= 0.4.11"
     , "connect-cors": "*"
     , "express": "2.5.0"
     , "jade": ">= 0.0.1"
