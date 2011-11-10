@@ -5,7 +5,7 @@
     , options = {
           "tmp": "/tmp"
         , "files": __dirname + "/files"
-        , "client": "./public"
+        , "client": __dirname + "/public"
       }
     , server = dropshare.create(options)
     ;

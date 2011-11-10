@@ -14,7 +14,7 @@ RESULT=`curl "${HOST}/files/new"  -X POST \
       }]'`
 
 echo $RESULT
-ID=`echo ${RESULT} | json-cherry-pick 0`
+ID=`echo ${RESULT} | json-cherry-pick 0` || exit
 
 curl "${HOST}/files"  -X POST \
   --form ${ID}=@foobar.txt
