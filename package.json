@@ -1,5 +1,6 @@
 {
   "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info/)",
+  "private": true,
   "name": "dropshare",
   "description": "A ge.tt / min.us clone for your private servers",
   "version": "0.1.0",
@@ -15,6 +16,15 @@
   "engines": {
     "node": "~0.4.8"
   },
-  "dependencies": {},
+  "dependencies": {
+      "connect": "*"
+    , "mime": "*"
+    , "connect-cors": "*"
+    , "express": "2.5.0"
+    , "jade": ">= 0.0.1"
+    , "redis": "0.6.x"
+    , "futures": "2.3.x"
+    , "formaline": "0.6.x"
+  },
   "devDependencies": {}
 }
