@@ -1,6 +1,8 @@
 #! /bin/bash
 
-HOST="http://localhost:3333"
+# npm install -g json-cherry-pick
+
+HOST="http://localhost:3700"
 
 RESULT=`curl "${HOST}/files/new"  -X POST \
   -H "Content-Type: application/json" \
