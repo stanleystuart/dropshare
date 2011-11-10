@@ -7,6 +7,7 @@
   var express = require('express')
     , util = require('util')
     , fs = require('fs')
+    , assert = require('assert')
     , numericBuffer = require('numeric-buffer')
     , Futures = require('futures')
     , Formaline = require('formaline')
@@ -58,6 +59,7 @@
   // Note: this is not actually very secure, consequences of
   // someone guessing someone else's unique id are low, so
   // it is not a big deal.
+  // TODO: pull this out into a separate file
   var generateID = (function () {
     var randomInts = []
     , i = 0
@@ -74,9 +76,11 @@
     });
 
     return function (startTime) {
-      var toReturn
+      var randomSuffix
       , now = Date.now()
-      , id;
+      , id
+      , idString
+      , removeTrailingEqualsRegex;
 
       // Difference between startTime and passed in time in seconds
       id = parseInt((now - startTime) / 1000, 10).toString();
@@ -89,12 +93,15 @@
         });
         counter = 0;
       }
-      toReturn = randomInts[counter];
+      randomSuffix = randomInts[counter];
 
-      id += toReturn;
+      id += randomSuffix;
 
       id = parseInt(id, 10);
-      var idString = numericBuffer(id).toString('base64');
+      // Convert the int into a base64 string
+      idString = numericBuffer(id).toString('base64');
+      removeTrailingEqualsRegex = /([a-zA-Z0-9\+\/]+)=+/;
+      idString = idString.replace(removeTrailingEqualsRegex, "$1");
       counter += 1;
       return idString;
     };
@@ -108,17 +115,16 @@
     , id
     , err
 
-    console.log(typeof(req.body));
     if (!req.body instanceof Array) {
       var err = {
-        'result': 'error',
-        'data': 'Must be an array of file metadata.'
+        "result": "error",
+        "data": "Must be an array of file metadata."
       };
       res.send(JSON.stringify(err), 400);
       return;
     }
 
-    for(i = 0; i < req.body.length; i++) {
+    for (i = 0; i < req.body.length; i++) {
       id = generateID(installTime);
       sequence.then(function (next) {
         storage.set(id, req.body[i], function (err, data) {
@@ -134,6 +140,80 @@
     });
   });
 
+  function handleUploadedFiles (json, res) {
+    var responses = [];
+
+    json.files.forEach(function (fileObj) {
+      handleUploadedFile(fileObj, function (response) {
+        responses.push(response);
+      });
+    });
+    //TODO: responses not working? they need to be in a callback?
+    res.send(formatFileUploadResponses(responses));
+  }
+
+  function handleUploadedFile (file, cb) {
+    console.log("calling handleUploadedFile");
+    // Check that metadata exists for this ID
+    storage.get(file.name, function (err, result) {
+      var response;
+      if (err !== null || result === null) {
+        cb({
+          "result": "error",
+          "data": "No metadata for id '" + file.name + "'."
+        });
+        return;
+      }
+
+      // If metadata exists, then move the file and update the metadata with the new path
+      var res = moveFileToStorage(file.name, file.value[0], cb({
+        "result": "success",
+        "data": "File " + file.name + " stored successfully."
+      }));
+    });
+  }
+
+  function moveFileToStorage(fileId, file) {
+    console.log("calling moveFileToStorage");
+    var is
+    , os
+    , newFilePath = 'files/' + file.sha1checksum;
+    fs.stat(file.path, function (err, stat) {
+      assert.strictEqual(err, null, "tried to move a non-existent file");
+
+      //check if file with same checksum already exists
+      fs.stat(newFilePath, function (err, stat) {
+        if (typeof stat === "undefined") {
+          // File does not exist already, so move it in to place
+          is = fs.createReadStream(file.path);
+          os = fs.createWriteStream(newFilePath);
+          util.pump(is, os, function () {
+            console.log("file moved!");
+          });
+        }
+        else {
+          console.log("file already exists");
+        }
+
+        addSHA1ToMetadata(fileId, file.sha1checksum);
+      });
+    });
+  }
+
+  function addSHA1ToMetadata(id, checksum) {
+    storage.get(id, function (err, data, isJSON) {
+      assert.ok(isJSON, "Metadata is not JSON");
+
+      data.sha1checksum = checksum;
+      storage.set(id, data, function (err, res) {
+        assert.deepEqual(err, null, "Error storing metadata again.");
+      });
+    });
+  }
+
+  function formatFileUploadResponses (responses) {
+    return JSON.stringify(responses);
+  }
 
   app.post('/files', function (req, res, next) {
     var form
@@ -145,30 +225,8 @@
       , listeners: {
         'loadend': function (json, res, callback) {
           console.log( '\nPost Done.\n' );
-          console.log( '\n JSON -> \n', json, '\n' );
-          res.writeHead( 200, { 'content-type' : 'text/plain' } );
-          res.write( '-> ' + new Date() + '\n' );
-          res.write( '-> request processed! \n' );
-          res.write( '\n-> stats -> ' + JSON.stringify( json.stats, null, 4 ) + '\n' );
-          res.write( '\n Initial Configuration : ' + JSON.stringify( form.initialConfig, function ( key, value ) {
-            if ( typeof value === 'function' ) {
-              return '..';
-            }
-            return value;
-          }, 4 ) + '\n' );
-
-          res.write( '\n-> fields received: [ { .. } , { .. } ] \n   ****************\n' + JSON.stringify( json.fields, null, 1 ) + '\n' );
-          res.write( '\n-> files written: [ { .. } , { .. } ] \n   **************\n ' + JSON.stringify( json.files, null, 1 ) + '\n' );
-          if ( form.removeIncompleteFiles ) {
-            res.write( '\n-> partially written ( removed ): [ { .. } , { .. } ] \n   *****************\n'+ JSON.stringify( json.incomplete, null, 1 ) + '\n' );
-          } else {
-            if ( json.incomplete.length !== 0 ) {
-              res.write( '\n-> partially written ( not removed ): \n   *****************\n' + JSON.stringify( json.incomplete, null, 1 ) + '\n' );
-            }
-          }
-          res.end();
           try {
-            callback();
+            callback(json, res);
           } catch ( err ) {
             console.log( 'error', err.stack );
           }
@@ -177,14 +235,41 @@
     }; // end config object
 
     form = new Formaline(config);
-    form.parse(req, res, function () {
-      console.log("formaline callback called");
-    });
+    form.parse(req, res, handleUploadedFiles);
   });
 
   app.get('/files/:id/:filename?', function (req, res, next) {
+    /*
+     * 1. Check if a file exists for that id
+     * 2. if so, allow them to download the file with the given filename
+     * 3. if they don't provide a filename, then do it with the filename stored in the metadata
+     * 4. if no file exists, then return an error
+     */
 
+    storage.get(req.params.id, function (err, data) {
+      if (err || data === null || typeof(data.sha1checksum) === "undefined") {
+        console.log('could not find the data');
+        res.writeHead(400, {'content-type': 'application/json'});
+        res.write(JSON.stringify({
+          "result": "failure",
+          "message": "No files uploaded for " + req.params.id + "."
+        }));
+        res.end();
+        return;
+      }
+
+      fs.readFile('files/' + data.sha1checksum, function (err, fileData) {
+        res.writeHead(200, {'content-type': data.type });
+        res.write(fileData);
+        res.end();
+      });
+
+    });
   });
+
+  // app.delete('/files/:id', function (req, res, next) {
+
+  // });
 
   app.listen(3333);
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
