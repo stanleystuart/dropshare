@@ -58,3 +58,8 @@ expect "$EXPECTED" "$RESPONSE" "Deleting a nonexistent file should return an err
 RESPONSE=`curl --silent "${HOST}/files/${ID}" -X DELETE`
 EXPECTED="{\"result\":\"success\",\"data\":\"Successfully deleted ${ID}.\"}"
 expect "$EXPECTED" "$RESPONSE" "Deleting an existing file should delete it."
+
+#test that getting the deleted file now returns an error
+RESONSE=`curl --silent "${HOST}/files/${ID}/foobar.bin" -X GET`
+EXPECTED="{\"result\":\"error\",\"data\":\"No files uploaded for ${ID}.\"}"
+expect "$EXPECTED" "$RESONSE" "Getting a deleted file should return an error, but not crash the server."
