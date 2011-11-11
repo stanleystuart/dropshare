@@ -47,9 +47,8 @@
         , "path": file.mozFullPath || file.webkitRelativePath
       });
       //file.xyz = 'something';
-      // XXX append to dom
       // $()
-      $('#uploadlist').append('<li class=\'file-info\'><span class=\'name\'>' + file.name + '</span></li>');
+      //$('#uploadlist').append('<li class=\'file-info\'></li>');
     }
 
     console.log(JSON.stringify(files));
@@ -64,15 +63,18 @@
         var file = files[j];
         formData.append(token, file);
         console.log('formData append', token, file.name);
+        $('#uploadlist').append('<li class=\'file-info\'></li>');
         $($('#uploadlist li')[j]).append('<span class=\'id\'>' + token + '</span>');
-        $($('#uploadlist li')[j]).append('<a href="/files/' + token + '/' + file.name + '">' + location.protocol + '//' + location.host + '/files/' + token + '/' + file.name + '</a>');
+        $($('#uploadlist li')[j]).append(file.name + '<br/>');
+        $($('#uploadlist li')[j]).append('<a href="#/share/' + token + '">' + location.protocol + '//' + location.host + '#/share/' + token + '</a>');
+        $($('#uploadlist li')[j]).append('<progress>0/0</progress>');
       });
 
       // "global" upload queue
       sequence.then(function () {
         request.post('/files', {}, formData).when(function (err, ahr, data2) {
           data.forEach(function (token, j) {
-            $($('#uploadlist li')[j]).append('<span class=\'remove-file\'>Delete</span>');
+            $($('#uploadlist li')[j]).append('<button class=\'remove-file\'>X</button>');
           });
         });
       });
@@ -116,6 +118,14 @@
     });
   }
 
+  function switchTabView() {
+    var name = $(this).attr('href').substr(1)
+      ;
+
+    $('.uiview').hide();
+    $('#' + name).show();
+  }
+
   var parentPos 
     , chooser
     ;
@@ -128,13 +138,16 @@
     parentPos.right = parentPos.left + parentPos.width;
     parentPos.bottom = parentPos.top + parentPos.height;
 
-    $('body').delegate('#filechooser', 'change', handleDrop);
+    $('body').delegate('.filechooser', 'change', handleDrop);
 
     $('body').delegate('#dropzone', 'dragover', handleDrag);
     $('body').delegate('#dropzone', 'drop', handleDrop);
     $('body').delegate('#dropzone', 'mousemove', onMouseMove);
     $('body').delegate('#dropzone', 'mouseleave', onMouseLeave);
-    $('body').delegate('.remove-file', 'click', onRemoveFile)
+    $('body').delegate('.remove-file', 'click', onRemoveFile);
+    $('body').delegate('.tabs a', 'click', switchTabView);
+    $('.uiview').hide();
+    $('#drop.uiview').show();
   }
 
 

@@ -1,12 +1,40 @@
-#dropzone {
-  width: 200px;
-  height: 200px;
-  margin: 20px;
-  background-color: yellow;
-  padding: 20px;
-  border: 2px dashed red;
-  border-radius: 5px;
-  cursor: pointer;
+.clear {
+  clear: both;
+}
+
+#drop {
+  border: solid 2px blue;
+  .short {
+    background-color: yellow;
+    height: 20px;
+  }
+  .tall {
+    background-color: yellow;
+    height: 200px;
+  }
+  .area {
+    width: 200px;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px dashed red;
+  }
+  #drop-container {
+    background-color: grey;
+    float: left;
+    .file-zone {
+      cursor: pointer;
+      border: 2px dashed red;
+      background-color: yellow;
+    }
+  }
+  #share-container {
+    background-color: purple;
+    float: left;
+    .id {
+      display: none;
+    }
+  }
 }
 
 #draggable {
@@ -20,12 +48,13 @@
   cursor: move;
 }
 
+
   /* 
     This snippet was stolen from min.us 
     It looks like it gets the cursor icon to be
     styleable in firefox
   */
-#filechooser {
+.filechooser {
   position: absolute;
   opacity: 0.3;
   /*
@@ -37,4 +66,10 @@
   height: 30px;
   margin: -10px 0pt 0pt -179px;
   cursor: pointer;
+}
+
+.tabs li {
+  display: inline;
+  margin: 10px;
+  padding: 10px;
 }

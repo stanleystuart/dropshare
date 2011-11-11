@@ -4,28 +4,63 @@ html
     link(rel='stylesheet',href='style.css')
     script(src='pakmanaged.js')
   body
+    .tabs
+      a(href='#drop')
+        image(src='images/logo.png',alt='logo')#logo
+
+    ul#main-tabs.tabs
+      li
+        a(href='#howitworks') How it Works
+      li
+        a(href='#pricing') Pricing
+      li
+        a(href='#about') About us
+
     #drop.uiview
-      h4 Drop
-      #dropzone
-        | Drag & Drop Files Here
-        br
-        | Or Click Here To Upload
-        //- TODO find out why this is laggy when placed outside of #dropzone
-        form#upload
-          //- webkitdirectory allows ONLY directories
-          input#filechooser(name='file',type='file',multiple='multiple')
-      h4 Share
-      #sharezone
-        ul#uploadlist
+      #drop-container
+        h4 Drop
+        #dropzone.tall.file-zone.area
+          | Drag & Drop Files from your Desktop
+          //- TODO find out why this is laggy when placed outside of #dropzone
+          form#upload.upload
+            //- webkitdirectory allows ONLY directories
+            input#filechooser.filechooser(name='file',type='file',multiple='multiple')
+        | OR
+        #uploadzone.short.file-zone.area
+          button#upload Browse Your Computer
+          form.upload
+            input.filechooser(name='file',type='file',multiple='multiple')
+      #share-container
+        h4 Share
+        .short.area
+          | Share with your Friends
+        .tall.area
+          ul#uploadlist
+      .clear
 
     #share.uiview
       h3.section You Got Shared!
+
     #about.uiview
       h3.section About
+
     #howitworks.uiview
       h3.section How It Works
       | Node.JS on the backend. Awesomeness on the frontend
+
     #legalese.uiview
       | This is for personal / private use. Don't share copyrighted material. Duh.
+
     #contact.uiview
       h3.section Contact
+
+    ul#foot-tabs.tabs
+      li
+        a(href='#contact') Contact
+      li
+        a(href='http://github.com/coolaj86/dropshare') Fork us on Github
+      li
+        a(href='#legalese') Legalese
+
+    footer
+      | Copyright 2011 Dropshare
