@@ -40,6 +40,9 @@ html
 
     #share.uiview
       h3.section You Got Shared!
+      //- must use full url
+      a#test-link.dnd(href='#/download/xyz123',draggable='true',data-downloadurl='image/png:test.png:http://localhost:3700/test.png')
+        | Drag this link to desktop to download
 
     #about.uiview
       h3.section About

@@ -126,6 +126,18 @@
     $('#' + name).show();
   }
 
+  function onDragOut(ev) {
+    var url = $(this).attr('data-downloadurl')
+      , result
+      ;
+
+    console.log('data-downloadurl', url);
+    result = ev.dataTransfer && ev.dataTransfer.setData('DownloadURL', url);
+    if (!result) {
+      alert('Sad Day! Your browser doesn\'t support drag-downloading files');
+    }
+  }
+
   var parentPos 
     , chooser
     ;
@@ -146,8 +158,11 @@
     $('body').delegate('#dropzone', 'mouseleave', onMouseLeave);
     $('body').delegate('.remove-file', 'click', onRemoveFile);
     $('body').delegate('.tabs a', 'click', switchTabView);
+    $('body').delegate('a.dnd', 'dragstart', onDragOut);
     $('.uiview').hide();
     $('#drop.uiview').show();
+    // TODO
+    //$('#share.uiview').show();
   }
 
 
