@@ -4,11 +4,28 @@ html
     link(rel='stylesheet',href='style.css')
     script(src='pakmanaged.js')
   body
-    #dropzone
-      | Drag & Drop Files Here
-      br
-      | Or Click Here To Upload
-      //- TODO find out why this is laggy when placed outside of #dropzone
-      form#upload
-        input#filechooser(name='file',type='file',multiple='multiple',webkitdirectory)
-    ul#uploadlist
+    #drop.uiview
+      h4 Drop
+      #dropzone
+        | Drag & Drop Files Here
+        br
+        | Or Click Here To Upload
+        //- TODO find out why this is laggy when placed outside of #dropzone
+        form#upload
+          //- webkitdirectory allows ONLY directories
+          input#filechooser(name='file',type='file',multiple='multiple')
+      h4 Share
+      #sharezone
+        ul#uploadlist
+
+    #share.uiview
+      h3.section You Got Shared!
+    #about.uiview
+      h3.section About
+    #howitworks.uiview
+      h3.section How It Works
+      | Node.JS on the backend. Awesomeness on the frontend
+    #legalese.uiview
+      | This is for personal / private use. Don't share copyrighted material. Duh.
+    #contact.uiview
+      h3.section Contact

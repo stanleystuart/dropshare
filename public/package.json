@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "jeesh": "*",
+    "pure": "2.x",
     "ahr2": "~2.1",
     "sequence": "~2.1"
   },

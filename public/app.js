@@ -5,6 +5,7 @@
 
   var $ = require('ender')
     , request = require('ahr2')
+    , pure = require('pure').$p
     , sequence = require('sequence')()
     ;
 
@@ -34,7 +35,6 @@
       alert('looks like you tried to drop a folder, but your browser doesn\'t support that yet');
       return;
     }
-    console.log();
 
     for (i = 0; i < files.length; i += 1) {
       file = files[i];
@@ -48,7 +48,8 @@
       });
       //file.xyz = 'something';
       // XXX append to dom
-      $('#uploadlist').append('<li>' + file.name + '</li>');
+      // $()
+      $('#uploadlist').append('<li class=\'file-info\'><span class=\'name\'>' + file.name + '</span></li>');
     }
 
     console.log(JSON.stringify(files));
@@ -60,15 +61,18 @@
 
       formData.append('secret', data.secret)
       data.forEach(function (token, j) {
-        formData.append(token, files[j]);
+        var file = files[j];
+        formData.append(token, file);
+        console.log('formData append', token, file.name);
+        $($('#uploadlist li')[j]).append('<span class=\'id\'>' + token + '</span>');
         $($('#uploadlist li')[j]).append('<a href="/files/' + token + '/' + file.name + '">' + location.protocol + '//' + location.host + '/files/' + token + '/' + file.name + '</a>');
       });
 
       // "global" upload queue
       sequence.then(function () {
-        request.post('/files', {}, formData).when(function (err, ahr, data) {
+        request.post('/files', {}, formData).when(function (err, ahr, data2) {
           data.forEach(function (token, j) {
-            $($('#uploadlist li')[j]).append('<span>Uploaded</span>');
+            $($('#uploadlist li')[j]).append('<span class=\'remove-file\'>Delete</span>');
           });
         });
       });
@@ -99,8 +103,14 @@
   }
 
   function onRemoveFile(ev) {
-    var id = $(this).closest('.file-info').find('.id')
+    var id = $(this).closest('.file-info').find('.id').text().trim()
+      , imSure = confirm('Are you sure you want to delet this?')
       ;
+
+    if (!imSure) {
+      return;
+    }
+
     request.delete(location.protocol + '//' + location.host + '/files/' + id).when(function (err, ahr, data) {
       console.log('prolly deleted:', err, ahr, data);
     });
