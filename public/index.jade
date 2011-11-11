@@ -5,16 +5,16 @@ html
     script(src='pakmanaged.js')
   body
     .tabs
-      a(href='#drop')
+      a(href='#/drop')
         image(src='images/logo.png',alt='logo')#logo
 
     ul#main-tabs.tabs
       li
-        a(href='#howitworks') How it Works
+        a(href='#/howitworks') How it Works
       li
-        a(href='#pricing') Pricing
+        a(href='#/pricing') Pricing
       li
-        a(href='#about') About us
+        a(href='#/about') About us
 
     #drop.uiview
       #drop-container
@@ -35,13 +35,13 @@ html
         .short.area
           | Share with your Friends
         .tall.area
-          ul#uploadlist
+          ul#uploadlist.tabs
       .clear
 
     #share.uiview
       h3.section You Got Shared!
       //- must use full url
-      a#test-link.dnd(href='#/download/xyz123',draggable='true',data-downloadurl='image/png:test.png:http://localhost:3700/test.png')
+      a.dnd(href='#didnt-work',draggable='true',data-downloadurl='application/octet-stream:index.jade:http://localhost:3700/index.jade')
         | Drag this link to desktop to download
 
     #about.uiview
@@ -59,11 +59,11 @@ html
 
     ul#foot-tabs.tabs
       li
-        a(href='#contact') Contact
+        a(href='#/contact') Contact
       li
         a(href='http://github.com/coolaj86/dropshare') Fork us on Github
       li
-        a(href='#legalese') Legalese
+        a(href='#/legalese') Legalese
 
     footer
       | Copyright 2011 Dropshare

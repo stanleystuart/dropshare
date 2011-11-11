@@ -118,9 +118,33 @@
     });
   }
 
-  function switchTabView() {
-    var name = $(this).attr('href').substr(1)
+  function switchToShare() {
+    if (!/\/share/.exec(location.hash)) {
+      return;
+    }
+
+    var id = location.hash.split('/')[2]
+      , name = location.hash.split('/')[3] || 'stream.bin'
+      , url = location.protocol + '//' + location.host + '/files/' + id + '/' + name
+      , type = 'application/octet-stream'
       ;
+
+    $('a.dnd').attr('href', url);
+    $('a.dnd').attr('data-downloadurl', type + ':' + name + ':' + url);
+    $('.uiview').hide();
+    $('#share.uiview').show();
+  }
+
+  function switchTabView() {
+    var name = $(this).attr('href').substr(2)
+      ;
+
+    setTimeout(switchToShare, 10);
+
+    // todo more robust url / hash checking
+    if (name.length > 20) {
+      return;
+    }
 
     $('.uiview').hide();
     $('#' + name).show();
@@ -133,6 +157,7 @@
 
     console.log('data-downloadurl', url);
     result = ev.dataTransfer && ev.dataTransfer.setData('DownloadURL', url);
+
     if (!result) {
       alert('Sad Day! Your browser doesn\'t support drag-downloading files');
     }
@@ -161,8 +186,7 @@
     $('body').delegate('a.dnd', 'dragstart', onDragOut);
     $('.uiview').hide();
     $('#drop.uiview').show();
-    // TODO
-    //$('#share.uiview').show();
+    switchToShare();
   }
 
 
