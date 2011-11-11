@@ -4,6 +4,8 @@
   console.log('Hello from DropShare!');
 
   var $ = require('ender')
+    , request = require('ahr2')
+    , sequence = require('sequence')()
     ;
 
   function handleDrag(ev) {
@@ -51,25 +53,26 @@
 
     console.log(JSON.stringify(files));
 
-    /*
+
     request.post('/files/new', {}, meta).when(function (err, ahr, data) {
       var formData = new FormData()
         ;
 
       formData.append('secret', data.secret)
-      data.tokens.forEach(function (token, j) {
+      data.forEach(function (token, j) {
         formData.append(token, files[j]);
-        $($('#uploadlist li')[j]).append('<a href="/file/' + token + '">http://dropsha.re/file/' + token + '/' + file.name + '</a>');
+        $($('#uploadlist li')[j]).append('<a href="/files/' + token + '/' + file.name + '">' + location.protocol + '//' + location.host + '/files/' + token + '/' + file.name + '</a>');
       });
 
       // "global" upload queue
       sequence.then(function () {
         request.post('/files', {}, formData).when(function (err, ahr, data) {
-          $($('#uploadlist li')[j]).append('<span>Uploaded</span>');
+          data.forEach(function (token, j) {
+            $($('#uploadlist li')[j]).append('<span>Uploaded</span>');
+          });
         });
       });
     });
-    */
   }
 
   function onMouseMove(ev) {

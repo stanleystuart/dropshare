@@ -6,10 +6,14 @@ Dropshare is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone.
 This contains both a server and clients (curl and browser)
 Dropshare-server is the server for a simple ge.tt or min.us clone.
 
-Install
+Quick Start
 ===
 
   0. Install `redis`. See Appendix (below) for installing redis on OS X.
+  0. Install [Spark](https://github.com/senchalabs/spark) with `npm install -g spark`.
+  0. Copy `config.default.js` to `config.js`, and customize any server
+     settings you would like.
+  0. Start the server with `spark`. By default it runs on port 3700.
 
 LICENSE
 ===

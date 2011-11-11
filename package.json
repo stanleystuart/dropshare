@@ -17,10 +17,11 @@
     "node": "~0.4.x"
   },
   "dependencies": {
-      "connect": "*"
-    , "mime": "*"
+      "connect": "~1.7"
+    , "mime": "~1.2"
     , "fs.extra": ">= 0.4.11"
-    , "connect-cors": "*"
+    , "connect-cors": "~0.5"
+    , "sequence": "~2.1"
     , "jade": ">= 0.0.1"
     , "redis": "0.6.x"
     , "futures": "2.3.x"
