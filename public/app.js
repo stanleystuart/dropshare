@@ -95,6 +95,14 @@
     chooser.css({ top: -1000, left: -1000 });
   }
 
+  function onRemoveFile(ev) {
+    var id = $(this).closest('.file-info').find('.id')
+      ;
+    request.delete(location.protocol + '//' + location.host + '/files/' + id).when(function (err, ahr, data) {
+      console.log('prolly deleted:', err, ahr, data);
+    });
+  }
+
   var parentPos 
     , chooser
     ;
@@ -111,8 +119,9 @@
 
     $('body').delegate('#dropzone', 'dragover', handleDrag);
     $('body').delegate('#dropzone', 'drop', handleDrop);
-    $('body').delegate('#dropzone', 'mousemove', function () { onMouseMove.apply(this, arguments) });
-    $('body').delegate('#dropzone', 'mouseleave', function () { onMouseLeave.apply(this, arguments) });
+    $('body').delegate('#dropzone', 'mousemove', onMouseMove);
+    $('body').delegate('#dropzone', 'mouseleave', onMouseLeave);
+    $('body').delegate('.remove-file', 'click', onRemoveFile)
   }
 
 
