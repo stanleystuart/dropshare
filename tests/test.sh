@@ -49,10 +49,22 @@ ID1=`echo ${RESULT} | json-cherry-pick 1` || exit
 ID2=`echo ${RESULT} | json-cherry-pick 2` || exit
 
 RESPONSE=`curl --silent "${HOST}/files"  -X POST \
-  --form ${ID0}=@temp.txt ${ID1}=@IMG_0366.JPG ${ID2}=@gopher.jpg`
-EXPECTED="HURP DURP"
-expect "$EXPECTED" "$RESULT" "HURP DURP"
+  --form ${ID0}=@temp.txt --form ${ID1}=@IMG_0366.JPG --form ${ID2}=@gopher.jpg`
+EXPECTED="[\"${ID0}\",\"${ID1}\",\"${ID2}\"]"
+expect "$EXPECTED" "$RESULT" "Multiple file uploads should return an array of the IDs for those files."
+#check to see if these uploads all worked
+RESPONSE=`curl --silent "${HOST}/files/${ID0}/test.txt" -X GET`
+EXPECTED=`cat temp.txt`
+expect "$EXPECTED" "$RESPONSE" "Uh oh"
 
+
+RESPONSE=`curl --silent "${HOST}/files/${ID1}/test.txt" -X GET`
+EXPECTED=`cat IMG_0366.JPG`
+expect "$EXPECTED" "$RESPONSE" "Uh oh"
+
+RESPONSE=`curl --silent "${HOST}/files/${ID2}/test.txt" -X GET`
+EXPECTED=`cat gopher.jpg`
+expect "$EXPECTED" "$RESPONSE" "Uh oh"
 
 # Test with a bogus id
 RESPONSE=`curl --silent "${HOST}/files"  -X POST \
