@@ -18,9 +18,13 @@ html
         li
           a(href='#/pricing')
             span.button.green Pricing
+        //-
+          li
+            a(href='#/about')
+              span.button.green About
         li
-          a(href='#/about')
-            span.button.green About
+          a(href='#/api')
+            span.button.green API
 
       #app
         #drop.uiview
@@ -46,14 +50,23 @@ html
             .tall.area.interactive
               #no-links
                 | As you select files to share, the links will appear here.
+              //- TODO http://www.nikesh.me/demo/loading.html
+              //- http://jimpunk.net/Loading/?page_id=9
+              //-img#loading-large(src='images/loading-large.gif')
+              //- http://new.rogers.com/web/resources/images/wireless/loading.gif
+              //- http://images.wordpressapi.com/loading.gif
               ul#uploadlist.tabs
                 li.file-info
                   span.id TPL-TOKEN
-                  | TPL-NAME
+                  span.name TPL-NAME
                   br
                   a(href='#/share/TPL-TOKEN') domain.tld/#/share/TPL-TOKEN
-                  progress 0/0
+                  progress
+                    span.val 0
+                    span.div /
+                    span.max 0
           .clear
+          | Files are stored for 3 days and then deleted.
 
         #share.uiview
           header.section Your file, Sir!
@@ -67,13 +80,102 @@ html
           br
           | (or click the old-fashioned way)
 
-        #about.uiview
-          header.section About
-          | Basically ge.tt and min.us were taking too long
-          | coming up with an API, so we built it ourselves.
+        //-
+          #about.uiview
+            header.section About
+            | Basically ge.tt and min.us were taking too long
+            | coming up with an API, so we built it ourselves.
+            br
+            | As an extra perk, Dropbin can be installed on
+            | private servers.
+
+        #api.uiview
+          //- TODO this should be an include with a markdown filter
+          header.section API
+          | WARNING: API is still subject to change
+
+          h3 Overview
+          ol
+            li submit meta data (name, path, mime-type, size, user fields)
+            li receive file ids (base64 ids)
+            li upload files by id (ids must match)
+            li retrieve meta data by id (/meta/${id})
+              br
+              | (this is useful for naming the file and showing progress)
+            li retrieve file by id (/files/${id}/${name})
+            li delete files or they will be deleted automatically
+              | after 72 hours
           br
-          | As an extra perk, Dropbin can be installed on
-          | private servers.
+          | NOTE: if files are submitted with http auth
+          | then they will require that auth to retrieve
+
+          h3 CREATE meta data to retrieve ids
+          pre
+            code
+              # request
+              curl dropb.in/meta/new \
+                -X POST -H 'application/json' \
+                -d '[
+                        {
+                            "name": "logo.png"
+                          , "path": "/home/user/images/"
+                          , "type": "image/png"
+                          , "size": 1048
+                          , "lastModifiedDate": "2011-09-20T16:16:48.000Z"
+                        }
+                      , {
+                            "name": "anthem.m4a"
+                          , "path": "/home/user/music/"
+                          , "type": "audio/mp4"
+                          , "size": 4440
+                          , "lastModifiedDate": "2011-11-12T03:38:08.000Z"
+                        }
+                    ]'
+
+              # response
+              {
+                  "error": false
+                , "errors": []
+                , "result": [
+                      "xyz123"
+                    , "abc789"
+                  ]
+              }
+
+          h3 CREATE files
+          pre
+            code
+              # request
+              curl dropb.in/files/new \
+                -X POST \
+                --form xyz123=@/home/user/images/logo.png \
+                --form abc789=@/home/user/music/anthem.m4a
+
+              # response
+              {
+                  "error": false
+                , "errors": []
+                , "result": [
+                      {
+                          "id": xyz123
+                        , "size": 1048
+                        , ...
+                      }
+                    , ...
+                  ]
+              }
+
+          h3 GET meta
+          | You'll either get back meta data or an error
+          pre
+            code
+              curl dropb.in/meta/xyz123
+
+          h3 GET file
+          | You'll either get back the file or an error
+          pre
+            code
+              curl dropb.in/files/xyz123/any-name-you-like.any
 
         #pricing.uiview
           header.section Pricing
@@ -108,6 +210,7 @@ html
           header.section Contact
           ul
             li AJ ONeal &lt;coolaj86@gmail.com&gt; (http://coolaj86.info)
+            li Jamison Dance &lt;jergason&gt; (http://jamisondance.com)
 
         br
 

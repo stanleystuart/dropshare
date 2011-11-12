@@ -7,6 +7,21 @@ body {
   font-size: 14pt;
 }
 
+.uiview {
+  text-align: left;
+}
+
+#share.uiview {
+  text-align: center;
+}
+
+#api {
+  code {
+    font-family: monospace;
+    font-size: 12px;
+  }
+}
+
 #beta-banner {
   position: absolute;
   top: 15px;
@@ -17,6 +32,7 @@ header, h1, h2, h3, h4, h5, h6 {
   font-family: 'Rammetto One', cursive;
   color: ghostwhite;
   text-shadow: 2px 2px 2px #000;
+  text-align: center;
 }
 
 header {
@@ -102,12 +118,14 @@ header {
     styleable in firefox
   */
 .filechooser {
+  background-color: white;
   position: absolute;
-  opacity: 0.3;
-  /*
+  /* TODO fix margins and such*/
+  opacity: 0;
+  /* */
   top: -1000px;
   left: -1000px;
-  */
+  /* */
   z-index: 1000000;
   margin: -10px 0pt 0pt -179px;
   height: 30px;
