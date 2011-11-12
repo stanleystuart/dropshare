@@ -1,15 +1,60 @@
+@import "stylesheets/buttons";
+
+body {
+  background-image:url('images/always-grey.png');
+  text-align: center;
+  color: #999;
+  font-size: 14pt;
+}
+
+header, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rammetto One', cursive;
+  color: ghostwhite;
+  text-shadow: 2px 2px 2px #000;
+}
+
+header {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 28pt;
+}
+
+#drop-action-image {
+  width: 196px;
+}
+
 .clear {
   clear: both;
 }
 
+#content {
+  margin: 0 auto;
+  width: 800px;
+}
+
+.interactive {
+  color: #666;
+  background-color: ghostwhite;
+  background-image: url('images/felt.png');
+}
+
+#app {
+  margin: 0 auto;
+  width: 600px;
+  border-radius: 15px;
+  /* border: 2px dashed red; */
+  background-color: rgba(0,0,0,0.3);
+  /* http://css-class.com/test/css/shadows/box-shadow-blur-offset-light.htm */
+  -webkit-box-shadow:0 0 1em hsla(0, 0%, 0%, 1.0);
+  -moz-box-shadow:0 0 1em hsla(0, 0%, 0%, 1.0);
+  box-shadow:0 0 1em hsla(0, 0%, 0%, 1.0);
+}
+
 #drop {
-  border: solid 2px blue;
   .short {
-    background-color: yellow;
     height: 20px;
   }
   .tall {
-    background-color: yellow;
     height: 200px;
   }
   .area {
@@ -17,19 +62,15 @@
     margin: 20px;
     padding: 20px;
     border-radius: 5px;
-    border: 2px dashed red;
+    border: 3px dashed red;
   }
   #drop-container {
-    background-color: grey;
     float: left;
     .file-zone {
       cursor: pointer;
-      border: 2px dashed red;
-      background-color: yellow;
     }
   }
   #share-container {
-    background-color: purple;
     float: left;
     .id {
       display: none;

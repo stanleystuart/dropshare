@@ -2,68 +2,113 @@
 html
   head
     link(rel='stylesheet',href='style.css')
+    link(href='http://fonts.googleapis.com/css?family=Rammetto+One',rel='stylesheet',type='text/css')
     script(src='pakmanaged.js')
   body
-    .tabs
-      a(href='#/drop')
-        image(src='images/logo.png',alt='logo')#logo
+    #content
 
-    ul#main-tabs.tabs
-      li
-        a(href='#/howitworks') How it Works
-      li
-        a(href='#/pricing') Pricing
-      li
-        a(href='#/about') About us
+      ul#main-tabs.tabs
+        li
+          a(href='#/drop')
+            span.button.black Dropb.in
+        li
+          a(href='#/howitworks')
+            span.button.green How it Works
+        li
+          a(href='#/pricing')
+            span.button.green Pricing
+        li
+          a(href='#/about')
+            span.button.green About
 
-    #drop.uiview
-      #drop-container
-        h4 Drop
-        #dropzone.tall.file-zone.area
-          | Drag & Drop Files from your Desktop
-          //- TODO find out why this is laggy when placed outside of #dropzone
-          form#upload.upload
-            //- webkitdirectory allows ONLY directories
-            input#filechooser.filechooser(name='file',type='file',multiple='multiple')
-        | OR
-        #uploadzone.short.file-zone.area
-          button#upload Browse Your Computer
-          form.upload
-            input.filechooser(name='file',type='file',multiple='multiple')
-      #share-container
-        h4 Share
-        .short.area
-          | Share with your Friends
-        .tall.area
-          ul#uploadlist.tabs
-      .clear
+      #app
+        #drop.uiview
+          #drop-container
+            header Drop
+            #dropzone.tall.file-zone.area.interactive
+              //- http://www.softicons.com/free-icons/web-icons/design-cartons-icons-by-sneh-roy/box-drag-and-drop-icon
+              img#drop-action-image(src='images/drag-n-drop-box.png',alt='Drag & Drop Files from your Desktop')
+              //- TODO find out why this is laggy when placed outside of #dropzone
+              form#upload.upload
+                //- webkitdirectory allows ONLY directories
+                input#filechooser.filechooser(name='file',type='file',multiple='multiple')
+            #uploadzone.short.file-zone.area.interactive
+              button#upload.button.gray Open File Browser
+              form.upload
+                input.filechooser(name='file',type='file',multiple='multiple')
+          #share-container
+            header Share
+            .short.area.interactive
+              //- http://www.iconseeker.com/search/SHARE/2
+              //-img(src='images/share-with-friends.png',style='width: 48px; display: inline;')
+              | Shareable Links
+            .tall.area.interactive
+              #no-links
+                | As you select files to share, the links will appear here.
+              ul#uploadlist.tabs
+                li.file-info
+                  span.id TPL-TOKEN
+                  | TPL-NAME
+                  br
+                  a(href='#/share/TPL-TOKEN') domain.tld/#/share/TPL-TOKEN
+                  progress 0/0
+          .clear
 
-    #share.uiview
-      h3.section You Got Shared!
-      //- must use full url
-      a.dnd(href='#didnt-work',draggable='true',data-downloadurl='application/octet-stream:index.jade:http://localhost:3700/index.jade')
-        | Drag this link to desktop to download
+        #share.uiview
+          header.section Your file, Sir!
+          | (or Ma'am)
+          br
+          //- must use full url
+          a.dnd(href='#didnt-work',draggable='true',data-downloadurl='application/octet-stream:index.jade:http://localhost:3700/index.jade')
+            img(src='images/harddrive-download.png')
+          br
+          | Drag to your Desktop to Download
+          br
+          | (or click the old-fashioned way)
 
-    #about.uiview
-      h3.section About
+        #about.uiview
+          header.section About
+          | Basically ge.tt and min.us were taking too long
+          | coming up with an API, so we built it ourselves.
+          br
+          | As an extra perk, Dropbin can be installed on
+          | private servers.
 
-    #howitworks.uiview
-      h3.section How It Works
-      | Node.JS on the backend. Awesomeness on the frontend
+        #pricing.uiview
+          header.section Pricing
+          | Contact for a consultation on these options
+          ul
+            li Purcahse full remote installation support
+            li Purchase a dedicated cloud appliance
+            li Purchase a physical appliance
+            li Do-it-yourself with the instructions on Github
 
-    #legalese.uiview
-      | This is for personal / private use. Don't share copyrighted material. Duh.
+        #howitworks.uiview
+          header.section How It Works
+          | Node.JS on the backend. Awesomeness on the frontend
+          br
+          | 'Nuff said.
 
-    #contact.uiview
-      h3.section Contact
+        #legalese.uiview
+          header Legalese
+          | This is for personal / private use. Don't share copyrighted material. Duh.
+          br
+          | Don't abuse the service.
 
-    ul#foot-tabs.tabs
-      li
-        a(href='#/contact') Contact
-      li
-        a(href='http://github.com/coolaj86/dropshare') Fork us on Github
-      li
-        a(href='#/legalese') Legalese
+        #contact.uiview
+          header.section Contact
+          ul
+            li AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info)
 
-    footer
-      | Copyright 2011 Dropshare
+        br
+
+      ul#foot-tabs.tabs
+        li
+          a.button.small.white(href='#/contact') Contact
+        li
+          a.button.small.gray(href='http://github.com/coolaj86/dropshare',target='_blank') Fork us on Github
+        li
+          a.button.small.white(href='#/legalese') Legalese
+
+      footer
+        | Copyright 2011 Dropshare
