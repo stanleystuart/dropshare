@@ -58,11 +58,16 @@
         // TODO use data-meta-id
         link.find('.id').text(token);
         //link.find('.name').text(file.name);
-        link.find('.name').remove();
         link.find('a').text(host + '/#/share/' + token + '/' + file.name); //encodeURIComponent(file.name));
-        link.find('a').attr('href', fullhost + '/#/share/' + token + '/' + file.name); //encodeURIComponent(file.name));
         //link.find('progress')
+        link.find('.name').remove();
+        link.find('a').attr('href', fullhost + '/#/share/' + token + '/' + file.name); //encodeURIComponent(file.name));
+        console.log(host + '/#/share/' + token + '/' + file.name);
       });
+      // this hack forces Chrome / Safari to redraw
+      $('#uploadlist')[0].style.display = 'none';
+      $('#uploadlist')[0].offsetHeight;
+      $('#uploadlist')[0].style.display = 'block';
 
       // "global" upload queue
       sequence.then(function (next) {
