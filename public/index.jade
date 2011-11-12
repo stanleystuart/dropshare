@@ -46,7 +46,7 @@ html
             .short.area.interactive
               //- http://www.iconseeker.com/search/SHARE/2
               //-img(src='images/share-with-friends.png',style='width: 48px; display: inline;')
-              | Shareable Links
+              span.draw-attention Copy and Share these:
             .tall.area.interactive
               #no-links
                 | As you select files to share, the links will appear here.
@@ -59,14 +59,14 @@ html
                 li.file-info
                   span.id TPL-TOKEN
                   span.name TPL-NAME
-                  br
                   a(href='#/share/TPL-TOKEN') domain.tld/#/share/TPL-TOKEN
+                  span.remove-file X
                   progress
                     span.val 0
                     span.div /
                     span.max 0
           .clear
-          | Files are stored for 3 days and then deleted.
+          #delete-notice Files are deleted after 3 days.
 
         #share.uiview
           header.section Your file, Sir!

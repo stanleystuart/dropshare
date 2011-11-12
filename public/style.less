@@ -49,20 +49,64 @@ header {
   clear: both;
 }
 
+ul#uploadlist {
+  font-size: 12pt;
+
+  padding: 0;
+  margin-left: 0;
+  margin-top: 0;
+
+  li.file-info {
+    display: block;
+    padding: 0;
+    margin-left: 0;
+    text-decoration: none;
+    margin-left: 5px;
+    a {
+      /* text-shadow: 2px 2px 2px #000; */
+      font-weight: bold;
+      color: #4e7d0e;
+      margin: 3px;
+      padding: 3px;
+      border-radius: 3px;
+    }
+    a:hover {
+      color: #7db72f;
+    }
+  }
+}
+
+#delete-notice {
+  color: #414141;
+  background-color: yellow;
+  margin: auto;
+  width: 300px;
+  text-align: center;
+  border: 2px dashed red;
+  padding: 3px;
+}
+
+.center {
+  text-align: center;
+}
+
 #content {
   margin: 0 auto;
   width: 800px;
+  .draw-attention {
+    font-weight: bold;
+  }
 }
 
 .interactive {
-  color: #666;
+  color: #414141;
   background-color: ghostwhite;
   background-image: url('images/felt.png');
 }
 
 #app {
   margin: 0 auto;
-  width: 600px;
+  width: 640px;
   border-radius: 15px;
   /* border: 2px dashed red; */
   background-color: rgba(0,0,0,0.3);
@@ -77,14 +121,14 @@ header {
     height: 20px;
   }
   .tall {
-    height: 200px;
+    min-height: 200px;
   }
   .area {
     width: 200px;
     margin: 20px;
     padding: 20px;
     border-radius: 5px;
-    border: 3px dashed red;
+    border: 3px dashed #C11B17;
   }
   #drop-container {
     float: left;
@@ -93,9 +137,15 @@ header {
     }
   }
   #share-container {
+    .tall.area.interactive {
+      overflow: visible;
+    }
     float: left;
     .id {
       display: none;
+    }
+    .area {
+      width: 260px;
     }
   }
 }

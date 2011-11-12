@@ -30,6 +30,7 @@
       link.find('a').attr('href', '#');
       //link.find('progress').attr('max', m.size);
       //link.find('progress').find('.max', m.size);
+      link.find('.remove-file').hide();
 
       files[i].link = link;
 
@@ -79,7 +80,8 @@
             link.find('progress').find('.max', file.size);
             link.find('progress').find('.val', file.size);
             */
-            link.append('<button class=\'remove-file\'>X</button>');
+            // TODO
+            //link.find('.remove-file').show();
           });
           next();
         });
