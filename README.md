@@ -13,7 +13,20 @@ Quick Start
   0. Install [Spark](https://github.com/senchalabs/spark) with `npm install -g spark`.
   0. Copy `config.default.js` to `config.js`, and customize any server
      settings you would like.
+  0. Run `public/deploy.sh` to compile the static assets.
   0. Start the server with `spark`. By default it runs on port 3700.
+
+Running Tests
+===
+
+Run the tests with:
+
+    cd tests
+    ./test.sh
+
+The tests depend on being in the same directory as the test script, due
+to paths to resources and such.
+
 
 LICENSE
 ===
