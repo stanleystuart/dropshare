@@ -12,25 +12,25 @@ html
     #content
 
       ul#main-tabs.tabs
-        li
+        li.tab.index.drop
           a(href='#/drop')
             span.button.black Dropb.in
-        li
+        li.tab.howitworks
           a(href='#/howitworks')
             span.button.green How it Works
-        li
+        li.tab.pricing
           a(href='#/pricing')
             span.button.green Pricing
         //-
           li
             a(href='#/about')
               span.button.green About
-        li
+        li.tab.api
           a(href='#/api')
             span.button.green API
 
       #app
-        #drop.uiview
+        #drop.uiview.drop.index
           #drop-container
             header Drop
             #dropzone.tall.file-zone.area.interactive
@@ -39,11 +39,11 @@ html
               //- TODO find out why this is laggy when placed outside of #dropzone
               form#upload.upload
                 //- webkitdirectory allows ONLY directories
-                input#filechooser.filechooser(name='file',type='file',multiple='multiple')
+                //- input#filechooser.filechooser(name='file',type='file',multiple='multiple')
             #uploadzone.short.file-zone.area.interactive
               button#upload.button.gray Open File Browser
               form.upload
-                input.filechooser(name='file',type='file',multiple='multiple')
+                //- input.filechooser(name='file',type='file',multiple='multiple')
           #share-container
             header Share
             .short.area.interactive
@@ -59,7 +59,7 @@ html
               //- http://new.rogers.com/web/resources/images/wireless/loading.gif
               //- http://images.wordpressapi.com/loading.gif
               ul#uploadlist.tabs
-                li.file-info
+                li.tab.file-info
                   span.id TPL-TOKEN
                   span.name TPL-NAME
                   a(href='#/share/TPL-TOKEN') domain.tld/#/share/TPL-TOKEN
@@ -71,7 +71,7 @@ html
           .clear
           #delete-notice Files are deleted after 3 days.
 
-        #share.uiview
+        #share.uiview.share
           header.section Your file, Sir!
           | (or Ma'am)
           br
@@ -84,7 +84,7 @@ html
           | (or click the old-fashioned way)
 
         //-
-          #about.uiview
+          #about.uiview.about
             header.section About
             | Basically ge.tt and min.us were taking too long
             | coming up with an API, so we built it ourselves.
@@ -92,7 +92,7 @@ html
             | As an extra perk, Dropbin can be installed on
             | private servers.
 
-        #api.uiview
+        #api.uiview.api
           //- TODO this should be an include with a markdown filter
           header.section API
           | WARNING: API is still subject to change
@@ -180,7 +180,7 @@ html
             code
               curl dropb.in/files/xyz123/any-name-you-like.any
 
-        #pricing.uiview
+        #pricing.uiview.pricing
           header.section Pricing
           | Contact for a consultation on these options
           ul
@@ -189,7 +189,7 @@ html
             li Physical appliance
             li DIY installation (see Github)
 
-        #howitworks.uiview
+        #howitworks.uiview.howitworks
           header.section How It Works
           | Node.JS on the backend. Awesomeness on the frontend
           br
@@ -203,13 +203,13 @@ html
                 | WebDesignerWall: CSS Buttons
           | 'Nuff said.
 
-        #legalese.uiview
+        #legalese.uiview.legalese
           header Legalese
           | This is for personal / private use. Don't share copyrighted material. Duh.
           br
           | Don't abuse the service.
 
-        #contact.uiview
+        #contact.uiview.contact
           header.section Contact
           ul
             li AJ ONeal &lt;coolaj86@gmail.com&gt; (http://coolaj86.info)
@@ -218,11 +218,11 @@ html
         br
 
       ul#foot-tabs.tabs
-        li
+        li.tab.contact
           a.button.small.white(href='#/contact') Contact
         li
           a.button.small.gray(href='http://github.com/coolaj86/dropshare',target='_blank') fork on Github
-        li
+        li.tab.legalese
           a.button.small.white(href='#/legalese') Legalese
 
       footer

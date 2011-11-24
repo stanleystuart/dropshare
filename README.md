@@ -3,7 +3,8 @@ Dropshare
 
 Dropshare is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone.
 
-This contains both a server and clients (curl and browser)
+This contains both a server and two client examples (for curl and browser)
+
 Dropshare-server is the server for a simple ge.tt or min.us clone.
 
 Quick Start
@@ -13,7 +14,7 @@ Quick Start
   0. Install [Spark](https://github.com/senchalabs/spark) with `npm install -g spark`.
   0. Copy `config.default.js` to `config.js`, and customize any server
      settings you would like.
-  0. Run `public/deploy.sh` to compile the static assets.
+  0. Run `cd public; ./deploy.sh` to compile the static assets.
   0. Start the server with `spark`. By default it runs on port 3700.
 
 Running Tests

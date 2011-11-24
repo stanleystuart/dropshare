@@ -7,16 +7,20 @@
     , request = require('ahr2')
     , pure = require('pure').$p
     , sequence = require('sequence')()
+    , Updrop = require('./vendor/updrop')
+    , UiTabs = require('./vendor/ui-tabs')
+    , warnOnLargeFiles = true
     , linkTpl
     ;
 
-  function handleDrag(ev) {
-    console.log('handledrag');
-    //ev.stopPropagation();
-    ev.preventDefault();
-  }
 
   function uploadMeta(files, meta) {
+    // I was attaching directly files[i].link = link
+    // but that failed (inconsistently) in Firefox
+    // maybe buggy garbage collection?
+    var fileData = []
+      ;
+
     $('#no-links').hide();
 
     // begin tempalte
@@ -32,7 +36,9 @@
       //link.find('progress').find('.max', m.size);
       link.find('.remove-file').hide();
 
-      files[i].link = link;
+      fileData[i] = {};
+      fileData[i].link = link;
+      fileData[i].file = files[i];
 
       $('ul#uploadlist').append(link);
     });
@@ -45,8 +51,8 @@
 
       // TODO data.result
       data.forEach(function (token, j) {
-        var file = files[j]
-          , link = file.link
+        var file = fileData[j].file
+          , link = fileData[j].link
           , host = location.host
           , fullhost = location.protocol + '//' + host
           ;
@@ -58,11 +64,12 @@
         // TODO use data-meta-id
         link.find('.id').text(token);
         //link.find('.name').text(file.name);
-        link.find('a').text(host + '/#/share/' + token + '/' + file.name); //encodeURIComponent(file.name));
         //link.find('progress')
+        link.find('progress').attr('max', file.size);
+        link.find('progress').find('.max').text(file.size);
         link.find('.name').remove();
-        link.find('a').attr('href', fullhost + '/#/share/' + token + '/' + file.name); //encodeURIComponent(file.name));
-        console.log(host + '/#/share/' + token + '/' + file.name);
+        link.find('a').text(host + '#' + token); //encodeURIComponent(file.name));
+        link.find('a').attr('href', fullhost + '#' + token); //encodeURIComponent(file.name));
       });
       // this hack forces Chrome / Safari to redraw
       $('#uploadlist')[0].style.display = 'none';
@@ -71,36 +78,70 @@
 
       // "global" upload queue
       sequence.then(function (next) {
-        request.post('/files', {}, formData).when(function (err, ahr, data2) {
+        var emitter;
+        emitter = request.post('/files', {}, formData);
+        emitter.when(function (err, ahr, data2) {
+          console.log('data at data2', data);
           data.forEach(function (token, k) {
-            var file = files[k]
-              , link = file.link
+            console.log(fileData, k);
+            var file = fileData[k].file
+              , link = fileData[k].link
               ;
+
+            console.log('file, link', file, link);
 
             // TODO
             link.find('progress').remove();
-            /*
-            link.find('progress').attr('max', file.size);
-            link.find('progress').attr('value', file.size);
-            link.find('progress').find('.max', file.size);
-            link.find('progress').find('.val', file.size);
-            */
             // TODO
             //link.find('.remove-file').show();
           });
           next();
         });
+
+        console.log(emitter);
+        emitter.upload.on('progress', function (ev) {
+          var totalLoaded = ev.loaded
+            , i
+            , file
+            , bytesLeft
+            , link
+            , bytesLoaded
+            ;
+
+          fileData.forEach(function (fileDatum, i) {
+          //for (i = 0; i < files.length; i += 1) {
+            file = fileDatum.file;
+            link = fileDatum.link;
+
+            if (totalLoaded > 0) {
+              bytesLeft = file.size - totalLoaded;
+              if (bytesLeft > 0) {
+                bytesLoaded = file.size - bytesLeft;
+              } else {
+                bytesLoaded = file.size;
+                bytesLeft = 0;
+              }
+              totalLoaded -= bytesLoaded;
+            } else {
+              bytesLoaded = 0;
+              bytesLeft = file.size;
+            }
+
+            link.find('progress').attr('value', bytesLoaded);
+            link.find('progress').find('.val').text(bytesLoaded);
+          //}
+          });
+          // TODO 
+
+          console.log('progressEv', ev.loaded, ev.total);
+        });
       });
     });
   }
 
-  function handleDrop(ev) {
-    console.log('I think you might have dropped something...')
-    
-    ev.preventDefault();
+  function handleDrop(files) {
     // handles both drop and file input change events
-    var files = this.files || ev.dataTransfer && ev.dataTransfer.files
-      , i
+    var i
       , file
       , meta = []
       ;
@@ -128,67 +169,21 @@
       //file.xyz = 'something';
       // $()
       //$('#uploadlist').append('<li class=\'file-info\'></li>');
+      if (warnOnLargeFiles) {
+        warnOnLargeFiles = false;
+        if (file.size >= (100 * 1024 * 1024)) {
+          alert(''
+            + 'Some browsers have issues with files as large as the ones you\'re trying to upload (100MiB+).'
+            + 'If your browser becomes slow, unresponsive, or crashes; try using Chrome instead'
+            );
+        }
+      }
     }
 
     console.log(JSON.stringify(files));
 
     uploadMeta(files, meta);
   }
-
-
-  // TODO move out to separate file
-  //
-  // Drop Area Widget
-  //
-  function preCalculatePos(elSelector) {
-    var posObj
-      ;
-
-    posObj = $(elSelector).offset();
-    posObj.right = posObj.left + posObj.width;
-    posObj.bottom = posObj.top + posObj.height;
-
-    return posObj;
-  }
-
-  function createDropAreaWidget(widgetRoot, dropEl, fileEl) {
-    var parentPos
-      , chooser
-      ;
-
-    function onMouseMove(ev) {
-      chooser.css({ top: ev.pageY - 10, left: ev.pageX - 10 });
-      var pos = chooser.offset();
-      pos.right = pos.left + pos.width;
-      // since a child is following us,
-      // the mouseout event doesn't work as well as hoped
-      if (
-             (ev.pageX > parentPos.right)
-          || (ev.pageY > parentPos.bottom)
-          || (ev.pageY < parentPos.top)
-          || (ev.pageX < parentPos.left)
-         ) {
-        //$('input').css({ top: (parentPos.top + parentPos.bottom) / 2, left: parentPos.left + 15 });
-        // TODO put far out -1000, -1000
-        chooser.css({ top: 10, left: 10 });
-      }
-      //console.log(ev.pageX, ev.pageY);
-    }
-
-    function onMouseLeave(ev) {
-      chooser.css({ top: -1000, left: -1000 });
-    }
-
-    chooser = $(dropEl + ' ' + fileEl);
-    parentPos = preCalculatePos(dropEl);
-
-    $(widgetRoot).delegate(dropEl, 'dragover', handleDrag);
-    $(widgetRoot).delegate(dropEl, 'drop', handleDrop);
-    $(widgetRoot).delegate(dropEl, 'mousemove', onMouseMove);
-    $(widgetRoot).delegate(dropEl, 'mouseleave', onMouseLeave);
-  }
-  // End Drop Area Widget
-
 
   function onRemoveFile(ev) {
     var id = $(this).closest('.file-info').find('.id').text().trim()
@@ -209,38 +204,6 @@
     });
   }
 
-  function switchToShare() {
-    if (!/\/share/.exec(location.hash)) {
-      return;
-    }
-
-    var id = location.hash.split('/')[2]
-      , name = location.hash.split('/')[3] || 'stream.bin'
-      , url = location.protocol + '//' + location.host + '/files/' + id + '/' + name
-      , type = 'application/octet-stream'
-      ;
-
-    $('a.dnd').attr('href', url);
-    $('a.dnd').attr('data-downloadurl', type + ':' + decodeURIComponent(name) + ':' + url);
-    $('.uiview').hide();
-    $('#share.uiview').show();
-  }
-
-  function switchTabView() {
-    var name = $(this).attr('href').substr(2)
-      ;
-
-    setTimeout(switchToShare, 10);
-
-    // todo more robust url / hash checking
-    if (name.length > 20) {
-      return;
-    }
-
-    $('.uiview').hide();
-    $('#' + name).show();
-  }
-
   function onDragOut(ev) {
     var url = $(this).attr('data-downloadurl')
       , result
@@ -254,33 +217,88 @@
     }
   }
 
+  function switchToShare() {
+    var resource = location.hash.substr(1).split('/');
+
+    // convert #share/xzy and #/share/xyz to #xyz
+    // TODO remove after a reasonable amount of time
+    if (/\/(s|share)/.exec(resource[0] || resource[1])) {
+      console.log('share', location.hash);
+      resource.shift(); // moves the '#' out
+      resource.shift(); // moves 's[hare]' out
+      location.hash = resource.join('/');
+      return true;
+    }
+
+    // only handle short urls without leading '/'
+    if ('' === resource[0]) {
+      console.log('noshare', location.hash);
+      return false;
+    }
+
+    console.log('goshare', location.hash);
+
+    console.log(resource);
+    var id = resource[0]
+      , name = resource[1] || 'stream.bin'
+      , url = location.protocol + '//' + location.host + '/files/' + id + '/' + name
+      , type = 'application/octet-stream'
+      ;
+
+    request.get('/meta/' + id).when(function (err, ahr, data) {
+      if (!data || !data.success) {
+        alert('Sad day! Looks like a bad link.');
+        return;
+      }
+
+      url = location.protocol + '//' + location.host + '/files/' + id + '/' + data.result.name
+      $('a.dnd').attr('href', url);
+      $('a.dnd').attr('data-downloadurl', type + ':' + decodeURIComponent(name) + ':' + url);
+      $('#loading').hide();
+
+      if (data.result.expired) {
+        alert('Sad day! "' + (data.result.name || 'That file')  + '" is no longer available. :\'|');
+        return;
+      }
+
+      console.log('data.result', data.result);
+      if (!data.result.sha1checksum && !data.result.sha1sum && !data.result.md5sum) {
+        alert('Wait for it... \njust. a. few. more. minutes... \nThe file is still uploading (or the upload failed{');
+        return;
+      }
+    });
+
+    // TODO loading
+    $('#loading').show();
+    $('a.dnd').attr('href', url);
+    $('a.dnd').attr('data-downloadurl', type + ':' + decodeURIComponent(name) + ':' + url);
+
+    $('.uiview').hide();
+    $('.share.uiview').show();
+
+    return true;
+  }
+
+  function handleSpecialRoutes(oldHash, newHash, urlObj) {
+    return switchToShare();
+  }
 
   function addHandlers() {
-    var dropElPos = preCalculatePos('#dropzone')
-      , browseElPos = preCalculatePos('#uploadzone')
-      , startTab
-      ; 
-
     linkTpl = $('ul#uploadlist').html()
     $('ul#uploadlist').html('')
 
     // TODO the chooser doesn't really belong in the
     // html It's not something a designer would style anyway
     // so this could be moved to a widget creator
-    createDropAreaWidget('body', '#dropzone', 'input.filechooser');
-    createDropAreaWidget('body', '#uploadzone', 'input.filechooser');
-    $('body').delegate('.filechooser', 'change', handleDrop);
+    Updrop.create(handleDrop, 'body', '#dropzone');
+    Updrop.create(handleDrop, 'body', '#uploadzone');
     
-
     $('body').delegate('.remove-file', 'click', onRemoveFile);
-    $('body').delegate('.tabs a', 'click', switchTabView);
+
+    //$('body').delegate('.tabs a', 'click', switchTabView);
     $('body').delegate('a.dnd', 'dragstart', onDragOut);
     $('.uiview').hide();
-
-    // TODO use hashchange event as to not break back/forward
-    startTab = location.hash.substr(2) || 'drop';
-    $('a[href="#/' + startTab + '"]').click();
-    switchToShare();
+    UiTabs.create(handleSpecialRoutes, 'body', '.tab', '.uiview');
   }
 
 

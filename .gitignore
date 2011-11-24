@@ -2,3 +2,4 @@ node_modules
 files
 *.swp
 *.swo
+config.js
