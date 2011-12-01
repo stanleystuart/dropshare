@@ -4,16 +4,6 @@
   //
   // Drop Area Widget
   //
-  function preCalculatePos(elSelector) {
-    var posObj
-      ;
-
-    posObj = $(elSelector).offset();
-    posObj.right = posObj.left + posObj.width;
-    posObj.bottom = posObj.top + (posObj.height);
-
-    return posObj;
-  }
 
   function handleDrag(ev) {
     console.log('handledrag');
@@ -22,7 +12,7 @@
   }
 
   function NewDropAreaWidget(callback, widgetRoot, dropEl) {
-    var parentPos
+    var parentDom = $(dropEl)
       , chooser
       , chooserClass
       ;
@@ -37,6 +27,13 @@
     }
 
     function onMouseMove(ev) {
+      // This calculation is done every time because
+      // other elements on the page may have changed
+      // i.e. a font may load after pageload or a list above may lengthen
+      var parentPos = parentDom.offset();
+      parentPos.right = parentPos.left + parentPos.width;
+      parentPos.bottom = parentPos.top + parentPos.height;
+
       // For some reason it is MUCH faster to render this input as a child
       // However, as moving-target-child it never "onMouseLeave"s
       if (
@@ -83,8 +80,6 @@
       ;
 
     $(dropEl).append(chooser);
-
-    parentPos = preCalculatePos(dropEl);
 
     $(widgetRoot).delegate(dropEl + ' input.' + chooserClass, 'change', handleFileSelectOrDrop);
     $(widgetRoot).delegate(dropEl, 'dragover', handleDrag);

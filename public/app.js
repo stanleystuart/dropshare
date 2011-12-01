@@ -287,9 +287,7 @@
     linkTpl = $('ul#uploadlist').html()
     $('ul#uploadlist').html('')
 
-    // TODO the chooser doesn't really belong in the
-    // html It's not something a designer would style anyway
-    // so this could be moved to a widget creator
+    // The input selector is created by updrop
     Updrop.create(handleDrop, 'body', '#dropzone');
     Updrop.create(handleDrop, 'body', '#uploadzone');
     
