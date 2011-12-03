@@ -99,5 +99,5 @@ expect "$EXPECTED" "$RESPONSE" "Querying for metadata with a valid ID should ret
 echo "Just the timestamp should be different. If you think of a good way to compare dynamically generated timestamps let me know."
 
 RESPONSE=`curl --silent "${HOST}/meta/FOOOOOBARRR" -X GET`
-EXPECTED="{\"response\":\"error\",\"data\":\"No metadata for FOOOOOBARRR.\"}"
+EXPECTED="{\"error\":true,\"result\":\"error\",\"errors\":[\"No metadata for FOOOOOBARRR.\"]}"
 expect "$EXPECTED" "$RESPONSE" "Querying for metadata for a non-existent ID should return an error."
