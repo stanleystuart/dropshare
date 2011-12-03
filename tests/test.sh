@@ -10,6 +10,20 @@ expect () {
   fi
 }
 
+expect_not_equal () {
+  if [[ "$1" = "$2" ]]; then
+    echo "FAILURE: $3"
+    echo "Expected $1 and got $2."
+  else
+    echo "."
+  fi
+}
+
+# start the server
+spark -C .. > /dev/null 2>&1 &
+PID=$!
+sleep 1
+
 HOST="http://localhost:3700"
 
 RESULT=`curl --silent "${HOST}/files/new"  -X POST \
@@ -101,3 +115,38 @@ echo "Just the timestamp should be different. If you think of a good way to comp
 RESPONSE=`curl --silent "${HOST}/meta/FOOOOOBARRR" -X GET`
 EXPECTED="{\"error\":true,\"result\":\"error\",\"errors\":[\"No metadata for FOOOOOBARRR.\"]}"
 expect "$EXPECTED" "$RESPONSE" "Querying for metadata for a non-existent ID should return an error."
+
+# Test that user-specified IDs are disallowed by default
+RESULT=`curl --silent "${HOST}/files/new"  -X POST \
+  -H "Content-Type: application/json" \
+  -d '[{
+        "size": 35,
+        "lastModifiedDate": "2011-11-08T00:15:06.000Z",
+        "fileName": "foobar.txt",
+        "type": "text/plain; charset=utf-8",
+        "id": "123456"
+      }]'`
+ID=`echo ${RESULT} | json-cherry-pick 0` || exit
+expect_not_equal "$ID" "123456" "Users should not be able to specify file IDs by default."
+
+
+kill $PID
+
+# Start a new server with user-specified ids allowed
+
+spark -C .. -c config.js > /dev/null 2>&1 &
+PID=$!
+sleep 1
+RESULT=`curl --silent "${HOST}/files/new"  -X POST \
+  -H "Content-Type: application/json" \
+  -d '[{
+        "size": 35,
+        "lastModifiedDate": "2011-11-08T00:15:06.000Z",
+        "fileName": "foobar.txt",
+        "type": "text/plain; charset=utf-8",
+        "id": "123456"
+      }]'`
+ID=`echo ${RESULT} | json-cherry-pick 0` || exit
+expect "$ID" "123456" "Users should be able to specify file IDs if the setting is allowed."
+
+kill $PID
