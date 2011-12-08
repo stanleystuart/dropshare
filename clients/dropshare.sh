@@ -39,8 +39,10 @@ RESULT=`curl --silent "${HOST}/files/new"  -X POST \
 # ex: ["p2Oo6f8"]
 ID=`echo ${RESULT} | cut -d'"' -f2`
 
-RESPONSE=`curl --silent "${HOST}/files"  -X POST \
+# TODO 
+RESPONSE=`curl --silent --progress-bar "${HOST}/files"  -X POST \
   --form ${ID}=@"${FILE}"`
+echo ""
 
 # http://api.dropsha.re/files/dx.R6f8/removefriend.php.har
 echo "Your file, Sir! (or Ma'am):"
