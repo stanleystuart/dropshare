@@ -33,7 +33,7 @@ Bash
     
     wget 'http://api.dropsha.re/files/foHsCQA/coolaj86@ubuntu-tablet.pub'
     
-    curl 'http://api.dropsha.re/files/foHsCQA' -O 'coolaj86@ubuntu-tablet.pub'
+    curl 'http://api.dropsha.re/files/foHsCQA' -o 'coolaj86@ubuntu-tablet.pub'
 
 **Installation**
 
