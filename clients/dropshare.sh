@@ -3,8 +3,8 @@
 #
 # Installation
 #
-# sudo wget https://raw.github.com/coolaj86/dropshare/master/clients/dropshare.sh -o /usr/local/bin/dropshare
-# sudo chmod a+x /usr/local/bin/dropshare
+# sudo wget 'https://raw.github.com/coolaj86/dropshare/master/clients/dropshare.sh' -O '/usr/local/bin/dropshare'
+# sudo chmod a+x '/usr/local/bin/dropshare'
 #
 
 HOST="http://api.dropsha.re"
@@ -57,8 +57,8 @@ echo "Your file, Sir! (or Ma'am):"
 echo ""
 echo "http://dropsha.re/#${ID}"
 echo ""
-echo "wget http://api.dropsha.re/files/${ID}/${FILE_NAME}"
+echo "wget 'http://api.dropsha.re/files/${ID}/${FILE_NAME}'"
 echo ""
-echo "curl http://api.dropsha.re/files/${ID} -O ${FILE_NAME}"
+echo "curl 'http://api.dropsha.re/files/${ID}' -O '${FILE_NAME}'"
 echo ""
 echo "dropshare-get ${ID}"
