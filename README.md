@@ -1,14 +1,53 @@
 Dropshare
 ===
 
-[Dropshare](http://dropsha.re) is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone. [droplr](http://droplr.com) is also similar.
+[DropShare](http://dropsha.re) is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone. [droplr](http://droplr.com) is also similar.
 
-This contains both a server and two client examples (for curl and browser)
-
-Dropshare-server is the server for a simple ge.tt or min.us clone.
-
-Quick Start
+Clients
 ===
+
+A few different clients are avaible.
+
+Web
+---
+
+With the web-client you can drag-n-drop or use the normal upload/download.
+
+    [http://dropsha.re](http://dropsha.re)
+
+Bash
+---
+
+**Usage**
+
+    dropshare /path/to/file.ext
+    
+    # Example - share your public ssh key with someone
+    dropshare ~/.ssh/id_rsa.pub
+    
+**Example Output**
+
+    Your file, Sir! (or Ma'am):
+    
+    http://dropsha.re/#foHsCQA
+    
+    wget 'http://api.dropsha.re/files/foHsCQA/coolaj86@ubuntu-tablet.pub'
+    
+    curl 'http://api.dropsha.re/files/foHsCQA' -O 'coolaj86@ubuntu-tablet.pub'
+
+**Installation**
+
+    sudo wget 'https://raw.github.com/coolaj86/dropshare/master/clients/dropshare.sh' -O '/usr/local/bin/dropshare'
+    sudo chmod a+x '/usr/local/bin/dropshare'
+
+Server
+===
+
+If you're interested in consulting or setup to run DropShare on your private network
+at your Home Office, or Business please contact <coolaj86@gmail.com>.
+
+Quick Start for Running your own DropShare
+---
 
   0. Install `redis`. See Appendix (below) for installing redis on OS X.
   0. Install [Spark](https://github.com/senchalabs/spark) with `npm install -g spark`.
@@ -18,7 +57,7 @@ Quick Start
   0. Start the server with `spark`. By default it runs on port 3700.
 
 Running Tests
-===
+---
 
 Run the tests with:
 
@@ -32,7 +71,7 @@ to paths to resources and such.
 LICENSE
 ===
 
-Dropshare is available under the following lincenses:
+Dropshare is available under the following licenses:
 
   * MIT
   * Apache 2
