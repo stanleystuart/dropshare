@@ -1,4 +1,12 @@
 #!/bin/bash
+
+#
+# Installation
+#
+# sudo wget https://raw.github.com/coolaj86/dropshare/master/clients/dropshare.sh -o /usr/local/bin/dropshare
+# sudo chmod a+x /usr/local/bin/dropshare
+#
+
 HOST="http://api.dropsha.re"
 
 FILE=$1
