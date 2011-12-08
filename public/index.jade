@@ -14,7 +14,7 @@ html
       ul#main-tabs.tabs
         li.tab.index.drop
           a(href='#/drop')
-            span.button.black Dropb.in
+            span.button.black Dropsha.re
         li.tab.howitworks
           a(href='#/howitworks')
             span.button.green How it Works
@@ -116,7 +116,7 @@ html
           pre
             code
               # request
-              curl dropb.in/meta/new \
+              curl dropsha.re/meta/new \
                 -X POST -H 'application/json' \
                 -d '[
                         {
@@ -149,7 +149,7 @@ html
           pre
             code
               # request
-              curl dropb.in/files/new \
+              curl dropsha.re/files/new \
                 -X POST \
                 --form xyz123=@/home/user/images/logo.png \
                 --form abc789=@/home/user/music/anthem.m4a
@@ -172,13 +172,13 @@ html
           | You'll either get back meta data or an error
           pre
             code
-              curl dropb.in/meta/xyz123
+              curl dropsha.re/meta/xyz123
 
           h3 GET file
           | You'll either get back the file or an error
           pre
             code
-              curl dropb.in/files/xyz123/any-name-you-like.any
+              curl dropsha.re/files/xyz123/any-name-you-like.any
 
         #pricing.uiview.pricing
           header.section Pricing
