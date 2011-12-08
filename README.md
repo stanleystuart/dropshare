@@ -1,7 +1,7 @@
 Dropshare
 ===
 
-Dropshare is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone. [droplr](http://droplr.com) is also similar.
+[Dropshare](http://dropsha.re) is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone. [droplr](http://droplr.com) is also similar.
 
 This contains both a server and two client examples (for curl and browser)
 
