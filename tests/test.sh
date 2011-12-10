@@ -22,6 +22,7 @@ expect_not_equal () {
 # start the server
 spark -C .. > /dev/null 2>&1 &
 PID=$!
+echo $PID
 sleep 1
 
 HOST="http://localhost:3700"
@@ -133,7 +134,8 @@ expect_not_equal "$ID" "123456" "Users should not be able to specify file IDs by
 kill $PID
 
 # Start a new server with user-specified ids allowed
-
+mv ../config.js ../config.normal.js
+mv config.js ../config.js
 spark -C .. -c config.js > /dev/null 2>&1 &
 PID=$!
 sleep 1
@@ -150,3 +152,5 @@ ID=`echo ${RESULT} | json-cherry-pick 0` || exit
 expect "$ID" "123456" "Users should be able to specify file IDs if the setting is allowed."
 
 kill $PID
+mv ../config.js ./
+mv ../config.normal.js ../config.js
