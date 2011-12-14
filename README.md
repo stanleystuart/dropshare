@@ -1,12 +1,21 @@
 Dropshare
 ===
 
-[DropShare](http://dropsha.re) is a shameless [ge.tt](http://ge.tt) / [min.us](http://min.us) clone. [droplr](http://droplr.com) is also similar.
+[DropShare](http://dropsha.re) is the answer to the age-old question of File Transfer:
 
 [![File Transfer][file-transfer]][xkcd-949]
 
 [xkcd-949]: http://xkcd.com/949/
 [file-transfer]: http://imgs.xkcd.com/comics/file_transfer.png "Every time you email a file to yourself so you can pull it up on your friend's laptop, Tim Berners-Lee sheds a single tear."
+
+Similar services include
+
+  * [ge.tt](http://ge.tt)
+  * [min.us](http://min.us)
+  * [droplr](http://droplr.com)
+  * [kicksend](http://kicksend.com/)
+  * [sendoid](http://sendoid.com/)
+  * [shareDesk](http://sharedesk.at) [fork on github](https://github.com/eeezyy/shareDesk)
 
 Clients
 ===
