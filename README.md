@@ -15,7 +15,7 @@ Similar services include
   * [droplr](http://droplr.com)
   * [kicksend](http://kicksend.com/)
   * [sendoid](http://sendoid.com/)
-  * [shareDesk](http://sharedesk.at) [fork on github](https://github.com/eeezyy/shareDesk)
+  * [shareDesk](http://sharedesk.at) [[fork on github](https://github.com/eeezyy/shareDesk)]
 
 Clients
 ===
