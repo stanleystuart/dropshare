@@ -18,7 +18,7 @@ Web
 
 With the web-client you can drag-n-drop or use the normal upload/download.
 
-    [http://dropsha.re](http://dropsha.re)
+[http://dropsha.re](http://dropsha.re)
 
 Bash
 ---
